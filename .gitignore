@@ -1,0 +1,25 @@
+﻿# Python
+__pycache__/
+*.pyc
+
+# Virtual environment
+.venv/
+venv/
+
+# PyInstaller build artifacts
+build/
+dist/
+*.spec
+
+# Local test data -- never commit user saves, ROMs, or exports
+*.sav
+*.srm
+*.gba
+*.pk3
+
+# Release bundles
+*.zip
+
+# OS cruft
+Thumbs.db
+.DS_Store
