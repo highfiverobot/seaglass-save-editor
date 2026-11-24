@@ -1,4 +1,4 @@
-<img width="512" height="512" alt="xl" src="https://github.com/user-attachments/assets/83fefe0c-c059-4ae2-897d-4ec42094b3b0" />
+<img width="512" height="512" alt="emerald seaglass editor" align="center" src="https://github.com/user-attachments/assets/83fefe0c-c059-4ae2-897d-4ec42094b3b0" />
 
 # Seaglass Save Editor
 
