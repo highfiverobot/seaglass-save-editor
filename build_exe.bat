@@ -26,6 +26,11 @@ if errorlevel 1 (
   ".venv\Scripts\python.exe" -m pip install pyinstaller
 )
 
+REM (Re)generate app.ico from large.png / small.png if the PNGs are present.
+if exist "large.png" (
+  ".venv\Scripts\python.exe" make_icon.py
+)
+
 REM Optional icon.
 set ICON_ARG=
 if exist "app.ico" set ICON_ARG=--icon app.ico
@@ -41,6 +46,9 @@ echo.
   --windowed ^
   --name SeaglassEditor ^
   %ICON_ARG% ^
+  --add-data "app.ico;." ^
+  --add-data "large.png;." ^
+  --add-data "small.png;." ^
   --hidden-import PySide6.QtCore ^
   --hidden-import PySide6.QtGui ^
   --hidden-import PySide6.QtWidgets ^

@@ -578,11 +578,26 @@ class Editor(QMainWindow):
         self.status(f"Exported {os.path.basename(path)} (100 bytes)")
 
 
+def _resource_path(name: str) -> str:
+    """Return the path to a bundled resource (works in source and in the
+    PyInstaller one-file build, where files are unpacked to sys._MEIPASS)."""
+    base = getattr(sys, "_MEIPASS", os.path.dirname(os.path.abspath(__file__)))
+    return os.path.join(base, name)
+
+
 def main():
     app = QApplication(sys.argv)
     app.setStyle("Fusion")
+    # Window / taskbar icon (app.ico is generated from large.png+small.png).
+    for icon_name in ("app.ico", "large.png"):
+        icon_path = _resource_path(icon_name)
+        if os.path.exists(icon_path):
+            app.setWindowIcon(QIcon(icon_path))
+            break
     win = Editor()
     theme.apply_theme(app, win)
+    if not app.windowIcon().isNull():
+        win.setWindowIcon(app.windowIcon())
     win.show()
     sys.exit(app.exec())
 

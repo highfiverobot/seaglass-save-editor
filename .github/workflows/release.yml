@@ -25,10 +25,17 @@ jobs:
           pip install -r requirements.txt
           pip install pyinstaller
 
+      - name: Generate app icon
+        run: python make_icon.py
+
       - name: Build one-file exe
         run: |
           python -m PyInstaller --noconfirm --clean --onefile --windowed `
             --name SeaglassEditor `
+            --icon app.ico `
+            --add-data "app.ico;." `
+            --add-data "large.png;." `
+            --add-data "small.png;." `
             --hidden-import PySide6.QtCore `
             --hidden-import PySide6.QtGui `
             --hidden-import PySide6.QtWidgets `
