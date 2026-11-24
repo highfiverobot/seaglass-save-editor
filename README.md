@@ -9,7 +9,9 @@ save -- or export individual pokemon as `.pk3` files for use in PKHeX.
 everything runs **locally**. your save file never leaves your computer and
 nothing is uploaded anywhere.
 
----
+<img src="docs/screenshots/ss1.jpg" alt="screenshot 1" width="860">
+
+<img src="docs/screenshots/ss2.jpg" alt="screenshot 2" width="860">
 
 ## features
 
