@@ -1,3 +1,8 @@
+
+
+<img width="2048" height="2048" alt="xxl" src="https://github.com/user-attachments/assets/dbb2fdab-abb4-4ad3-ac6c-79110efaf2e4" />
+
+
 # Seaglass Save Editor
 
 A friendly desktop save editor for **Pokemon Emerald Seaglass**. Browse your
