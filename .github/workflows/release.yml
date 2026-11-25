@@ -34,8 +34,7 @@ jobs:
             --name SeaglassEditor `
             --icon app.ico `
             --add-data "app.ico;." `
-            --add-data "large.png;." `
-            --add-data "small.png;." `
+            --add-data "esg.png;." `
             --hidden-import PySide6.QtCore `
             --hidden-import PySide6.QtGui `
             --hidden-import PySide6.QtWidgets `

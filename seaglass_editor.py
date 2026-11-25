@@ -192,6 +192,28 @@ class Editor(QMainWindow):
         outer.addLayout(head)
 
         split = QSplitter(Qt.Horizontal)
+
+        # left pane: logo + trainer info (trainer fields are placeholders for now)
+        logo_scroll = QScrollArea(); logo_scroll.setWidgetResizable(True)
+        logo_inner = QWidget(); self.logo_layout = QVBoxLayout(logo_inner)
+        self.logo_layout.setContentsMargins(8, 8, 8, 8); self.logo_layout.setSpacing(10)
+        self.logo_label = QLabel()
+        self.logo_label.setObjectName('logo')
+        self.logo_label.setAlignment(Qt.AlignCenter)
+        _pm = QPixmap(_resource_path('esg.png'))
+        if not _pm.isNull():
+            self.logo_label.setPixmap(_pm.scaled(220, 220, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+        self.logo_label.setMinimumHeight(120)
+        self.logo_layout.addWidget(self.logo_label)
+        info_box = QGroupBox('Trainer')
+        ib = QFormLayout(info_box)
+        self.lbl_ot = QLabel('—'); self.lbl_money = QLabel('—'); self.lbl_badges = QLabel('—')
+        ib.addRow('Name', self.lbl_ot); ib.addRow('Money', self.lbl_money); ib.addRow('Badges', self.lbl_badges)
+        self.logo_layout.addWidget(info_box)
+        self.logo_layout.addStretch(1)
+        logo_scroll.setWidget(logo_inner)
+        logo_scroll.setMinimumWidth(170)
+        split.addWidget(logo_scroll)
         outer.addWidget(split, 1)
 
         left_scroll = QScrollArea(); left_scroll.setWidgetResizable(True)
@@ -217,7 +239,7 @@ class Editor(QMainWindow):
         panel = QWidget(); self.form_outer = QVBoxLayout(panel); self.form_outer.setSpacing(12)
         scroll.setWidget(panel)
         split.addWidget(scroll)
-        split.setSizes([430, 750])
+        split.setSizes([200, 430, 720])
 
         toprow = QHBoxLayout()
         self.sprite = QLabel(); self.sprite.setObjectName("sprite")
@@ -391,8 +413,15 @@ class Editor(QMainWindow):
             btn.setIcon(QIcon(pm)); btn.setIconSize(QSize(54, 54))
         tip = rom.species_name(mon.species)
         if mon.is_shiny:
-            tip = "\u2605 " + tip
+            tip = "\u2728 " + tip
         btn.setToolTip(tip)
+        if mon.is_shiny:
+            badge = QLabel("\u2728", btn)
+            badge.setStyleSheet('QLabel { background: transparent; font-size: 13px; color: #ffd54a; }')
+            badge.setAttribute(Qt.WA_TransparentForMouseEvents, True)
+            badge.adjustSize()
+            badge.move(btn.width() - badge.width() - 2, 0)
+            badge.show()
         return btn
 
     def _build_party_grid(self):
@@ -588,8 +617,8 @@ def _resource_path(name: str) -> str:
 def main():
     app = QApplication(sys.argv)
     app.setStyle("Fusion")
-    # Window / taskbar icon (app.ico is generated from large.png+small.png).
-    for icon_name in ("app.ico", "large.png"):
+    # Window / taskbar icon (app.ico is generated from esg.png).
+    for icon_name in ("app.ico", "esg.png"):
         icon_path = _resource_path(icon_name)
         if os.path.exists(icon_path):
             app.setWindowIcon(QIcon(icon_path))

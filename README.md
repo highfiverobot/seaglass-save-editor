@@ -100,8 +100,7 @@ setup.bat          :: one-time: creates .venv and installs dependencies
 build_exe.bat      :: builds dist\SeaglassEditor.exe (one-file, windowed)
 ```
 
-to add an icon, drop a multi-resolution `app.ico` in the project folder before
-running `build_exe.bat`; it is picked up automatically.
+the app icon is built from esg.png (a single 256x256 image); replace that file and rebuild so pp.ico is regenerated automatically.
 
 releases are also built automatically on GitHub when a tag like `v0.1.0` is
 pushed (see `.github/workflows/release.yml`).
