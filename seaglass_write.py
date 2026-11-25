@@ -207,7 +207,7 @@ def save_to_file(save: Save, path: str):
 
 
 # --------------------------------------------------------------------------
-# PK3 export (100-byte party-format Pokemon file for PKHeX)
+# Shiny helper (PID/OTID secret-ID nudge used to make a mon shiny)
 # --------------------------------------------------------------------------
 
 def _make_pid_shiny(pid: int, otid: int) -> int:
@@ -226,59 +226,3 @@ def _make_pid_shiny(pid: int, otid: int) -> int:
         if ((pid & 0xFFFF) ^ ((pid >> 16) & 0xFFFF) ^ (new & 0xFFFF) ^ ((new >> 16) & 0xFFFF)) < 8:
             return new
     return otid  # fallback (shouldn't happen)
-
-
-def to_pk3(mon_raw: bytes, level: int = 0, want_shiny: bool = False) -> bytes:
-    """Convert a mon (party 100-byte or box 80-byte) into a 100-byte PK3.
-
-    PKHeX's Gen3 .pk3 is the 100-byte PARTY structure:
-      0x00 PID, 0x04 OTID, 0x08 nickname(10), 0x12 lang, 0x13 flags,
-      0x14 OT name, 0x18 markings, 0x1C checksum(u16), 0x1E pad,
-      0x20 encrypted/shuffled 48-byte substructs, 0x50 party stats/tail.
-    The checksum at 0x1C is the sum of the 24 DECRYPTED u16 substruct words.
-
-    If ``want_shiny`` is True the mon is made shiny by the standard Gen3
-    PID/OTID rule (by adjusting only the hidden Secret ID), so it shows as
-    shiny in BOTH the game and PKHeX. If False, the Seaglass shiny flag bit
-    (raw header 0x1F & 0x40) is cleared in the export and the standard rule is
-    not forced.
-    """
-    raw = bytearray(mon_raw[:100])
-    if len(raw) < 100:
-        raw += bytes(100 - len(raw))   # synthesize empty party tail for box mons
-        if 0 < level <= 100:
-            raw[0x54] = level & 0xFF
-
-    # Language byte: keep valid Gen3 values (1-7), otherwise default to English.
-    if raw[0x12] not in (1, 2, 3, 4, 5, 6, 7):
-        raw[0x12] = 2
-
-    pid = struct.unpack_from("<I", raw, 0x00)[0]
-    otid = struct.unpack_from("<I", raw, 0x04)[0]
-
-    # Reconcile shiny so the export is understood by PKHeX (standard rule).
-    pid_shiny = ((pid & 0xFFFF) ^ ((pid >> 16) & 0xFFFF)
-                 ^ (otid & 0xFFFF) ^ ((otid >> 16) & 0xFFFF)) < 8
-    if want_shiny and not pid_shiny:
-        otid = _make_pid_shiny(pid, otid)
-        struct.pack_into("<I", raw, 0x04, otid)
-    if want_shiny:
-        raw[0x1F] |= 0x40      # keep the Seaglass flag too (game side)
-    else:
-        raw[0x1F] &= ~0x40     # not shiny: ensure Seaglass flag is clear
-
-    key = (pid ^ otid) & 0xFFFFFFFF
-    enc = bytearray(raw[0x20:0x20 + 48])
-    for i in range(0, 48, 4):
-        v = struct.unpack_from("<I", enc, i)[0] ^ key
-        struct.pack_into("<I", enc, i, v & 0xFFFFFFFF)
-    chk = sum(struct.unpack_from("<24H", bytes(enc), 0)) & 0xFFFF
-    struct.pack_into("<H", raw, 0x1C, chk)
-    return bytes(raw)
-
-
-def export_pk3(mon_raw: bytes, path: str, level: int = 0, want_shiny: bool = False) -> str:
-    data = to_pk3(mon_raw, level, want_shiny)
-    with open(path, "wb") as f:
-        f.write(data)
-    return path

@@ -7,7 +7,7 @@ Left panel:  a collapsible "Party" section and one collapsible grid per PC box.
 Right pane:  sprite, info (with gender + shiny), and editable party fields.
 
 Party mons are editable (write path in seaglass_write.py). Box mons are
-read-only for now (view + .pk3 export). Species and nature are read-only.
+read-only for now (view only). Species and nature are read-only.
 """
 
 from __future__ import annotations
@@ -25,7 +25,7 @@ from PySide6.QtWidgets import (
 )
 
 from seaglass_inspect import Rom, Save, NATURES, STAT_KEYS
-from seaglass_write import EditableMon, write_party_mon, save_to_file, export_pk3
+from seaglass_write import EditableMon, write_party_mon, save_to_file
 import theme
 
 STAT_LABELS = ["HP", "Atk", "Def", "Spe", "SpA", "SpD"]
@@ -178,13 +178,11 @@ class Editor(QMainWindow):
         self.btn_apply = QPushButton("Apply to Pok\u00e9mon"); self.btn_apply.setObjectName("primary")
         self.btn_save = QPushButton("Save")
         self.btn_saveas = QPushButton("Save As\u2026")
-        self.btn_pk3 = QPushButton("Export .pk3\u2026")
         self.btn_rom.clicked.connect(self.open_rom)
         self.btn_open_save.clicked.connect(self.open_save)
         self.btn_apply.clicked.connect(self.apply_current)
         self.btn_save.clicked.connect(self.save_over)
         self.btn_saveas.clicked.connect(self.save_as)
-        self.btn_pk3.clicked.connect(self.export_pk3_current)
         outer.addLayout(head)
         # Action buttons on their own row so the window can be narrower than the
         # combined width of all button labels (esp. with the wide pixel font).
@@ -193,7 +191,7 @@ class Editor(QMainWindow):
         actions = FlowLayout(hspacing=8, vspacing=6)
         actions.addWidget(self.cb_only_shiny)
         for b in (self.btn_rom, self.btn_open_save, self.btn_apply,
-                  self.btn_save, self.btn_saveas, self.btn_pk3):
+                  self.btn_save, self.btn_saveas):
             actions.addWidget(b)
         actions_holder = QWidget(); actions_holder.setLayout(actions)
         outer.addWidget(actions_holder)
@@ -335,7 +333,7 @@ class Editor(QMainWindow):
         for w in (self.ed_nick, self.sp_lvl, self.sp_exp, self.sp_friend,
                   self.cb_ability, self.cb_item, self.cb_shiny, *self.cb_moves,
                   *self.iv_spins, *self.ev_spins, self.btn_apply,
-                  self.btn_save, self.btn_saveas, self.btn_pk3):
+                  self.btn_save, self.btn_saveas):
             w.setEnabled(on)
 
     # ------------------------------------------------------------- file open
@@ -498,13 +496,12 @@ class Editor(QMainWindow):
         self._current_mon = mon
         self._load_into_editor(mon, editable=False)
         self.status(f"Box {box + 1} slot {pos + 1}: {self.rom.species_name(mon.species)} "
-                    "(box view is read-only; .pk3 export available)")
+                    "(box view is read-only)")
 
     def _load_into_editor(self, m, editable: bool):
         rom = self.rom
         self._set_editor_enabled(editable)
-        # PK3 export and Save are valid for box mons too (read-only view + export).
-        self.btn_pk3.setEnabled(True)
+        # Save is valid for box mons too (read-only view).
         self.btn_save.setEnabled(True)
         self.btn_saveas.setEnabled(True)
         self.ed_nick.setText(m.nickname)
@@ -563,7 +560,7 @@ class Editor(QMainWindow):
         if self.sel_kind != "party" or not isinstance(self.sel_index, int):
             QMessageBox.information(self, "Party only",
                                     "Only party Pok\u00e9mon can be edited in this version. "
-                                    "Box mons are read-only (use Export .pk3).")
+                                    "Box mons are read-only.")
             return
         idx = self.sel_index
         m = self.mons[idx]
@@ -620,22 +617,6 @@ class Editor(QMainWindow):
         except Exception as e:
             QMessageBox.critical(self, "Save error", str(e)); return
         self.status(f"Overwrote {os.path.basename(self.save_path)}")
-
-    def export_pk3_current(self):
-        if self._current_mon is None:
-            return
-        m = self._current_mon
-        sp = self.rom.species_name(m.species)
-        default = f"{m.nickname.strip() or sp}_{sp}.pk3".replace(" ", "_")
-        path, _ = QFileDialog.getSaveFileName(self, "Export .pk3", default, "PK3 (*.pk3);;All files (*)")
-        if not path:
-            return
-        try:
-            export_pk3(m.raw, path, level=m.level, want_shiny=m.is_shiny)
-        except Exception as e:
-            QMessageBox.critical(self, "Export error", str(e)); return
-        self.status(f"Exported {os.path.basename(path)} (100 bytes)")
-
 
 def _resource_path(name: str) -> str:
     """Return the path to a bundled resource (works in source and in the
