@@ -175,7 +175,6 @@ class Editor(QMainWindow):
         self.btn_open_save = QPushButton("Open Save\u2026")
         self.cb_only_shiny = QCheckBox("Show only shinies")
         self.cb_only_shiny.toggled.connect(self._on_only_shiny_toggle)
-        head.addWidget(self.cb_only_shiny)
         self.btn_apply = QPushButton("Apply to Pok\u00e9mon"); self.btn_apply.setObjectName("primary")
         self.btn_save = QPushButton("Save")
         self.btn_saveas = QPushButton("Save As\u2026")
@@ -190,6 +189,8 @@ class Editor(QMainWindow):
         # Action buttons on their own row so the window can be narrower than the
         # combined width of all button labels (esp. with the wide pixel font).
         actions = QHBoxLayout()
+        actions.addWidget(self.cb_only_shiny)
+        actions.addSpacing(12)
         for b in (self.btn_rom, self.btn_open_save, self.btn_apply,
                   self.btn_save, self.btn_saveas, self.btn_pk3):
             actions.addWidget(b)
@@ -435,7 +436,7 @@ class Editor(QMainWindow):
         btn.setToolTip(tip)
         if mon.is_shiny:
             badge = QLabel("\u2728", btn)
-            badge.setStyleSheet('QLabel { background: transparent; font-size: 13px; color: #ffd54a; }')
+            badge.setStyleSheet('QLabel { background: transparent; font-size: 15px; color: #c0392b; }')
             badge.setAttribute(Qt.WA_TransparentForMouseEvents, True)
             badge.adjustSize()
             badge.move(btn.width() - badge.width() - 2, 0)
@@ -545,7 +546,7 @@ class Editor(QMainWindow):
             f"Egg: {m.is_egg}\n"
             f"PID: 0x{m.pid:08X}\n"
             f"OTID: 0x{m.otid:08X}\n"
-            f"HP/Atk/Def/SpA/SpD/Spe: "
+            f"HP/Atk/Def/SpA/SpD/Spe:" + "\n" +
             f"{bst[0]}/{bst[1]}/{bst[2]}/{bst[4]}/{bst[3]}/{bst[5]}")
 
     # --------------------------------------------------------------- apply
