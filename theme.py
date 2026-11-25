@@ -34,7 +34,7 @@ def _load_font(app):
     """Register the bundled pixel font and set it as the application font.
     Returns the family name to use in the stylesheet (falls back to a system
     font family if loading fails)."""
-    path = _resource_path("PokemonGb-RAeo.ttf")
+    path = _resource_path("orange-kid.regular.otf")
     family = None
     if os.path.exists(path):
         fid = QFontDatabase.addApplicationFont(path)
@@ -45,7 +45,7 @@ def _load_font(app):
     if not family:
         family = "Segoe UI"
     f = QFont(family)
-    f.setPixelSize(15)
+    f.setPixelSize(12)
     app.setFont(f)
     return family
 
@@ -53,7 +53,7 @@ def _load_font(app):
 def _build_qss(p, family):
     fam = f'"{family}"'
     return f"""
-    * {{ font-family: {fam}, "MS Gothic", monospace; font-size: 14px; }}
+    * {{ font-family: {fam}, "MS Gothic", monospace; font-size: 12px; }}
     QMainWindow, QWidget#root {{ background: {p['BG']}; }}
     QLabel {{ color: {p['TEXT']}; background: transparent; }}
     QLabel#header {{ color: {p['ACCENT']}; border: none; border-bottom: 3px solid {p['ACCENT']};
@@ -62,7 +62,7 @@ def _build_qss(p, family):
     QLabel#sprite {{ background: {p['SURFACE2']}; border: 2px solid {p['BORDER']};
         border-radius: 6px; }}
     QLabel#info {{ background: {p['SURFACE2']}; color: {p['TEXT']};
-        border: 2px solid {p['BORDER']}; border-radius: 4px; padding: 8px 10px; font-size: 13px; }}
+        border: 2px solid {p['BORDER']}; border-radius: 4px; padding: 8px 10px; font-size: 12px; }}
     QCheckBox {{ color: {p['TEXT']}; font-weight: 600; spacing: 8px; }}
     QCheckBox::indicator {{ width: 16px; height: 16px; border: 2px solid {p['BORDER']};
         border-radius: 3px; background: {p['SURFACE2']}; }}
@@ -97,6 +97,8 @@ def _build_qss(p, family):
     QStatusBar {{ background: {p['SURFACE']}; color: {p['TEXT_MUTED']}; border-top: 2px solid {p['BORDER']}; }}
     QStatusBar::item {{ border: 0; }}
     QScrollArea {{ background: transparent; border: 0; }}
+    QScrollArea#logoScroll, QScrollArea#leftScroll {{ background: {p['SURFACE']}; border: 0; }}
+    QScrollArea#logoScroll > QWidget > QWidget, QScrollArea#leftScroll > QWidget > QWidget {{ background: {p['SURFACE']}; }}
     QScrollArea#editorScroll {{ background: transparent; border: 0; }}
     QScrollArea#editorScroll > QWidget > QWidget {{ background: transparent; }}
     QScrollBar:vertical {{ background: {p['SURFACE']}; width: 12px; margin: 2px; border-radius: 6px; }}

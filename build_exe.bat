@@ -48,7 +48,7 @@ echo.
   %ICON_ARG% ^
   --add-data "app.ico;." ^
   --add-data "esg.png;." ^
-  --add-data "PokemonGb-RAeo.ttf;." ^
+  --add-data "orange-kid.regular.otf;." ^
   --hidden-import PySide6.QtCore ^
   --hidden-import PySide6.QtGui ^
   --hidden-import PySide6.QtWidgets ^

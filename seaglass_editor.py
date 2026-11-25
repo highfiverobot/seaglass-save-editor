@@ -199,9 +199,10 @@ class Editor(QMainWindow):
         split = QSplitter(Qt.Horizontal)
 
         # left pane: logo + trainer info (trainer fields are placeholders for now)
-        logo_scroll = QScrollArea(); logo_scroll.setWidgetResizable(True)
+        logo_scroll = QScrollArea(); logo_scroll.setObjectName('logoScroll'); logo_scroll.setWidgetResizable(True)
         logo_inner = QWidget(); self.logo_layout = QVBoxLayout(logo_inner)
         self.logo_layout.setContentsMargins(8, 8, 8, 8); self.logo_layout.setSpacing(10)
+        self.logo_layout.setAlignment(Qt.AlignHCenter | Qt.AlignTop)
         self.logo_label = QLabel()
         self.logo_label.setObjectName('logo')
         self.logo_label.setAlignment(Qt.AlignCenter)
@@ -210,12 +211,12 @@ class Editor(QMainWindow):
         self.logo_label.setFixedSize(LOGO_SIZE, LOGO_SIZE)
         if not _pm.isNull():
             self.logo_label.setPixmap(_pm.scaled(LOGO_SIZE, LOGO_SIZE, Qt.KeepAspectRatio, Qt.SmoothTransformation))
-        self.logo_layout.addWidget(self.logo_label)
+        self.logo_layout.addWidget(self.logo_label, 0, Qt.AlignHCenter)
         info_box = QGroupBox('Trainer')
         ib = QFormLayout(info_box)
         self.lbl_ot = QLabel('—'); self.lbl_money = QLabel('—'); self.lbl_badges = QLabel('—')
         ib.addRow('Name', self.lbl_ot); ib.addRow('Money', self.lbl_money); ib.addRow('Badges', self.lbl_badges)
-        self.logo_layout.addWidget(info_box)
+        self.logo_layout.addWidget(info_box, 0, Qt.AlignHCenter)
         self.logo_layout.addStretch(1)
         logo_scroll.setWidget(logo_inner)
         # Fixed-width, non-resizable logo pane that always shows the whole logo
@@ -227,7 +228,7 @@ class Editor(QMainWindow):
         split.setStretchFactor(0, 0)
         outer.addWidget(split, 1)
 
-        left_scroll = QScrollArea(); left_scroll.setWidgetResizable(True)
+        left_scroll = QScrollArea(); left_scroll.setObjectName('leftScroll'); left_scroll.setWidgetResizable(True)
         left_inner = QWidget(); self.left_layout = QVBoxLayout(left_inner)
         self.left_layout.setContentsMargins(0, 0, 0, 0); self.left_layout.setSpacing(8)
         left_scroll.setWidget(left_inner)
@@ -539,11 +540,13 @@ class Editor(QMainWindow):
         self.info.setText(
             f"{where}\n"
             f"Species: {self.rom.species_name(m.species)} (#{m.species})\n"
-            f"Gender: {GENDER_GLYPH.get(g,'')} {g.capitalize()}    "
-            f"Shiny: {'YES' if shiny else 'no'}    Egg: {m.is_egg}\n"
-            f"PID: 0x{m.pid:08X}    OTID: 0x{m.otid:08X}\n"
-            f"Base: {bst[0]}/{bst[1]}/{bst[2]}/{bst[4]}/{bst[3]}/{bst[5]}  "
-            f"(HP/Atk/Def/SpA/SpD/Spe)")
+            f"Gender: {GENDER_GLYPH.get(g,'')} {g.capitalize()}\n"
+            f"Shiny: {'YES' if shiny else 'no'}\n"
+            f"Egg: {m.is_egg}\n"
+            f"PID: 0x{m.pid:08X}\n"
+            f"OTID: 0x{m.otid:08X}\n"
+            f"HP/Atk/Def/SpA/SpD/Spe: "
+            f"{bst[0]}/{bst[1]}/{bst[2]}/{bst[4]}/{bst[3]}/{bst[5]}")
 
     # --------------------------------------------------------------- apply
     def apply_current(self):
