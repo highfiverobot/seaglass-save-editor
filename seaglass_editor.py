@@ -159,7 +159,7 @@ class Editor(QMainWindow):
         self.sel_index = None
         self._current_mon = None
         self.setWindowTitle("Emerald Seaglass \u2014 Save Editor")
-        self.resize(1120, 900)
+        self.resize(1370, 1080)
         self._build_ui()
 
     # ------------------------------------------------------------------ UI
