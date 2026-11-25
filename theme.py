@@ -53,7 +53,7 @@ def _build_qss(p, family):
     * {{ font-family: {fam}, "MS Gothic", monospace; font-size: 22px; }}
     QMainWindow, QWidget#root {{ background: {p['BG']}; }}
     QWidget {{ color: {p['TEXT']}; }}
-    QLabel {{ color: {p['TEXT']}; background: transparent; }}
+    QLabel {{ color: {p['ACCENT']}; background: transparent; }}
     QLabel#header {{ color: {p['ACCENT']}; border: none; border-bottom: 3px solid {p['ACCENT']};
         padding: 2px 0 8px 0; font-size: 32px; font-weight: 700; }}
     QLabel#logo {{ background: transparent; }}
@@ -63,9 +63,9 @@ def _build_qss(p, family):
     QGroupBox#trainerBox QLabel, QLabel#trainerVal {{ color: {p['ACCENT']}; }}
     QLabel#sprite {{ background: {p['SURFACE2']}; border: 3px solid {p['ACCENT']};
         border-radius: 6px; }}
-    QLabel#info {{ background: {p['SURFACE2']}; color: {p['TEXT']};
+    QLabel#info {{ background: {p['SURFACE2']}; color: {p['ACCENT']};
         border: 2px solid {p['BORDER']}; border-radius: 4px; padding: 8px 10px; font-size: 19px; }}
-    QCheckBox {{ color: {p['TEXT']}; font-weight: 700; spacing: 8px; }}
+    QCheckBox {{ color: {p['ACCENT']}; font-weight: 700; spacing: 8px; }}
     QCheckBox::indicator {{ width: 18px; height: 18px; border: 2px solid {p['ACCENT']};
         border-radius: 3px; background: {p['SURFACE2']}; }}
     QCheckBox::indicator:checked {{ background: {p['ACCENT']}; border: 2px solid {p['ACCENT_PRESS']}; }}

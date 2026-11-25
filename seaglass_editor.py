@@ -16,7 +16,7 @@ import os
 import sys
 
 from PySide6.QtCore import Qt, QSize, QRect, QPoint, QRectF
-from PySide6.QtGui import QImage, QPixmap, QIcon
+from PySide6.QtGui import QImage, QPixmap, QIcon, QPainter, QColor, QFont
 from PySide6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QLabel, QPushButton, QToolButton,
     QComboBox, QLineEdit, QSpinBox, QCheckBox, QGroupBox, QFormLayout,
@@ -416,9 +416,9 @@ class Editor(QMainWindow):
         btn = QPushButton()
         btn.setFixedSize(64, 64)
         btn.setFlat(True)
-        btn.setStyleSheet("QPushButton { border: 1px solid palette(mid); border-radius: 6px;"
+        btn.setStyleSheet("QPushButton { border: 2px solid #c0392b; border-radius: 6px;"
                           " background: transparent; }"
-                          "QPushButton:hover { border: 1px solid palette(highlight); }")
+                          "QPushButton:hover { border: 2px solid #8e2a20; }")
         if mon is None:
             btn.setVisible(False)
             return btn
@@ -435,11 +435,19 @@ class Editor(QMainWindow):
             tip = "\u2728 " + tip
         btn.setToolTip(tip)
         if mon.is_shiny:
-            badge = QLabel("\u2728", btn)
-            badge.setStyleSheet('QLabel { background: transparent; font-size: 15px; color: #c0392b; }')
+            _spk = QPixmap(20, 20)
+            _spk.fill(Qt.transparent)
+            _sp = QPainter(_spk)
+            _sp.setRenderHint(QPainter.Antialiasing, True)
+            _sf = QFont(); _sf.setPixelSize(18)
+            _sp.setFont(_sf); _sp.setPen(QColor('#c0392b'))
+            _sp.drawText(_spk.rect(), Qt.AlignCenter, chr(0x2728))
+            _sp.end()
+            badge = QLabel(btn)
+            badge.setPixmap(_spk)
             badge.setAttribute(Qt.WA_TransparentForMouseEvents, True)
             badge.adjustSize()
-            badge.move(btn.width() - badge.width() - 2, 0)
+            badge.move(btn.width() - badge.width() - 1, 0)
             badge.show()
         return btn
 
