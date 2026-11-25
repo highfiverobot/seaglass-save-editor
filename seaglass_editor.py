@@ -159,7 +159,7 @@ class Editor(QMainWindow):
         self.sel_index = None
         self._current_mon = None
         self.setWindowTitle("Emerald Seaglass \u2014 Save Editor")
-        self.resize(1080, 800)
+        self.resize(1120, 900)
         self._build_ui()
 
     # ------------------------------------------------------------------ UI
@@ -188,14 +188,15 @@ class Editor(QMainWindow):
         outer.addLayout(head)
         # Action buttons on their own row so the window can be narrower than the
         # combined width of all button labels (esp. with the wide pixel font).
-        actions = QHBoxLayout()
+        # Actions use a wrapping FlowLayout so a very large font does not
+        # force the window to be wider than the sum of all button labels.
+        actions = FlowLayout(hspacing=8, vspacing=6)
         actions.addWidget(self.cb_only_shiny)
-        actions.addSpacing(12)
         for b in (self.btn_rom, self.btn_open_save, self.btn_apply,
                   self.btn_save, self.btn_saveas, self.btn_pk3):
             actions.addWidget(b)
-        actions.addStretch(1)
-        outer.addLayout(actions)
+        actions_holder = QWidget(); actions_holder.setLayout(actions)
+        outer.addWidget(actions_holder)
 
         split = QSplitter(Qt.Horizontal)
 
@@ -414,7 +415,7 @@ class Editor(QMainWindow):
     def _cell_button(self, mon):
         rom = self.rom
         btn = QPushButton()
-        btn.setFixedSize(64, 64)
+        btn.setFixedSize(72, 72)
         btn.setFlat(True)
         btn.setStyleSheet("QPushButton { border: 2px solid #c0392b; border-radius: 6px;"
                           " background: transparent; }"
@@ -427,12 +428,12 @@ class Editor(QMainWindow):
         if not visible:
             btn.setVisible(False)
             return btn
-        pm = sprite_pixmap(rom, mon.species, mon.is_shiny, size=54)
+        pm = sprite_pixmap(rom, mon.species, mon.is_shiny, size=62)
         if not pm.isNull():
-            btn.setIcon(QIcon(pm)); btn.setIconSize(QSize(54, 54))
+            btn.setIcon(QIcon(pm)); btn.setIconSize(QSize(62, 62))
         tip = rom.species_name(mon.species)
         if mon.is_shiny:
-            tip = "\u2728 " + tip
+            tip = "\u2605 " + tip
         btn.setToolTip(tip)
         if mon.is_shiny:
             _spk = QPixmap(20, 20)
@@ -441,7 +442,7 @@ class Editor(QMainWindow):
             _sp.setRenderHint(QPainter.Antialiasing, True)
             _sf = QFont(); _sf.setPixelSize(18)
             _sp.setFont(_sf); _sp.setPen(QColor('#c0392b'))
-            _sp.drawText(_spk.rect(), Qt.AlignCenter, chr(0x2728))
+            _sp.drawText(_spk.rect(), Qt.AlignCenter, chr(0x2605))
             _sp.end()
             badge = QLabel(btn)
             badge.setPixmap(_spk)

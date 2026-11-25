@@ -42,7 +42,7 @@ def _load_font(app):
     if not family:
         family = "Segoe UI"
     f = QFont(family)
-    f.setPixelSize(22)
+    f.setPixelSize(30)
     app.setFont(f)
     return family
 
@@ -50,12 +50,12 @@ def _load_font(app):
 def _build_qss(p, family):
     fam = f'"{family}"'
     return f"""
-    * {{ font-family: {fam}, "MS Gothic", monospace; font-size: 22px; }}
+    * {{ font-family: {fam}, "MS Gothic", monospace; font-size: 30px; }}
     QMainWindow, QWidget#root {{ background: {p['BG']}; }}
     QWidget {{ color: {p['TEXT']}; }}
     QLabel {{ color: {p['ACCENT']}; background: transparent; }}
     QLabel#header {{ color: {p['ACCENT']}; border: none; border-bottom: 3px solid {p['ACCENT']};
-        padding: 2px 0 8px 0; font-size: 32px; font-weight: 700; }}
+        padding: 2px 0 8px 0; font-size: 44px; font-weight: 700; }}
     QLabel#logo {{ background: transparent; }}
     QWidget#editorPanel QLabel, QWidget#editorPanel QCheckBox,
     QWidget#editorPanel QGroupBox, QWidget#editorPanel QFormLayout QLabel {{
@@ -64,7 +64,7 @@ def _build_qss(p, family):
     QLabel#sprite {{ background: {p['SURFACE2']}; border: 3px solid {p['ACCENT']};
         border-radius: 6px; }}
     QLabel#info {{ background: {p['SURFACE2']}; color: {p['ACCENT']};
-        border: 2px solid {p['BORDER']}; border-radius: 4px; padding: 8px 10px; font-size: 19px; }}
+        border: 2px solid {p['BORDER']}; border-radius: 4px; padding: 8px 10px; font-size: 26px; }}
     QCheckBox {{ color: {p['ACCENT']}; font-weight: 700; spacing: 8px; }}
     QCheckBox::indicator {{ width: 18px; height: 18px; border: 2px solid {p['ACCENT']};
         border-radius: 3px; background: {p['SURFACE2']}; }}
@@ -72,7 +72,7 @@ def _build_qss(p, family):
     QGroupBox {{ background: {p['SURFACE']}; border: 2px solid {p['ACCENT']}; border-radius: 6px;
         margin-top: 18px; padding: 20px 12px 12px 12px; font-weight: 700; color: {p['ACCENT']}; }}
     QGroupBox::title {{ subcontrol-origin: margin; subcontrol-position: top left; left: 12px;
-        padding: 0 6px; background: {p['SURFACE']}; color: {p['ACCENT']}; font-size: 20px; font-weight: 700; }}
+        padding: 0 6px; background: {p['SURFACE']}; color: {p['ACCENT']}; font-size: 28px; font-weight: 700; }}
     QPushButton {{ background: {p['SURFACE2']}; border: 2px solid {p['ACCENT']};
         border-radius: 5px; padding: 6px 12px; color: {p['ACCENT']}; font-weight: 700; }}
     QPushButton:hover {{ background: {p['SURFACE']}; border: 2px solid {p['ACCENT_PRESS']}; color: {p['ACCENT_PRESS']}; }}
