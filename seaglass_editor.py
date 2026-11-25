@@ -200,10 +200,11 @@ class Editor(QMainWindow):
         self.logo_label = QLabel()
         self.logo_label.setObjectName('logo')
         self.logo_label.setAlignment(Qt.AlignCenter)
+        LOGO_SIZE = 200
         _pm = QPixmap(_resource_path('esg.png'))
+        self.logo_label.setFixedSize(LOGO_SIZE, LOGO_SIZE)
         if not _pm.isNull():
-            self.logo_label.setPixmap(_pm.scaled(220, 220, Qt.KeepAspectRatio, Qt.SmoothTransformation))
-        self.logo_label.setMinimumHeight(120)
+            self.logo_label.setPixmap(_pm.scaled(LOGO_SIZE, LOGO_SIZE, Qt.KeepAspectRatio, Qt.SmoothTransformation))
         self.logo_layout.addWidget(self.logo_label)
         info_box = QGroupBox('Trainer')
         ib = QFormLayout(info_box)
@@ -212,8 +213,13 @@ class Editor(QMainWindow):
         self.logo_layout.addWidget(info_box)
         self.logo_layout.addStretch(1)
         logo_scroll.setWidget(logo_inner)
-        logo_scroll.setMinimumWidth(170)
+        # Fixed-width, non-resizable logo pane that always shows the whole logo
+        # (logo width + side margins + scrollbar room).
+        logo_scroll.setFixedWidth(LOGO_SIZE + 40)
+        logo_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         split.addWidget(logo_scroll)
+        split.setCollapsible(0, False)
+        split.setStretchFactor(0, 0)
         outer.addWidget(split, 1)
 
         left_scroll = QScrollArea(); left_scroll.setWidgetResizable(True)
@@ -239,7 +245,12 @@ class Editor(QMainWindow):
         panel = QWidget(); self.form_outer = QVBoxLayout(panel); self.form_outer.setSpacing(12)
         scroll.setWidget(panel)
         split.addWidget(scroll)
-        split.setSizes([200, 430, 720])
+        split.setSizes([240, 420, 700])
+        # Lock the logo pane width: disable the first splitter handle so it
+        # cannot be dragged (handle exists only after sections are added).
+        _h = split.handle(1)
+        if _h is not None:
+            _h.setEnabled(False)
 
         toprow = QHBoxLayout()
         self.sprite = QLabel(); self.sprite.setObjectName("sprite")
