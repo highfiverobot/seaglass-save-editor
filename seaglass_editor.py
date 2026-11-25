@@ -121,8 +121,8 @@ class CollapsibleSection(QWidget):
         self.toggle.setToolButtonStyle(Qt.ToolButtonTextOnly)
         self.toggle.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
         self.toggle.setStyleSheet(
-            "QToolButton { text-align: left; font-weight: 600; padding: 6px 8px;"
-            " border: 1px solid palette(mid); border-radius: 6px; }")
+            "QToolButton { text-align: left; font-weight: 700; padding: 6px 8px; color: #c0392b;"
+            " border: 2px solid #c0392b; border-radius: 6px; background: #fcf8ea; }"            "QToolButton:hover { background: #f6efd9; }")
         self.toggle.clicked.connect(self._on_click)
         lay.addWidget(self.toggle)
         self.body = QWidget()
@@ -159,7 +159,7 @@ class Editor(QMainWindow):
         self.sel_index = None
         self._current_mon = None
         self.setWindowTitle("Emerald Seaglass \u2014 Save Editor")
-        self.resize(980, 720)
+        self.resize(1080, 800)
         self._build_ui()
 
     # ------------------------------------------------------------------ UI
@@ -213,7 +213,7 @@ class Editor(QMainWindow):
         if not _pm.isNull():
             self.logo_label.setPixmap(_pm.scaled(LOGO_SIZE, LOGO_SIZE, Qt.KeepAspectRatio, Qt.SmoothTransformation))
         self.logo_layout.addWidget(self.logo_label, 0, Qt.AlignHCenter)
-        info_box = QGroupBox('Trainer')
+        info_box = QGroupBox('Trainer'); info_box.setObjectName('trainerBox')
         ib = QFormLayout(info_box)
         self.lbl_ot = QLabel('—'); self.lbl_money = QLabel('—'); self.lbl_badges = QLabel('—')
         ib.addRow('Name', self.lbl_ot); ib.addRow('Money', self.lbl_money); ib.addRow('Badges', self.lbl_badges)
@@ -249,7 +249,7 @@ class Editor(QMainWindow):
         self.left_layout.addStretch(1)
 
         scroll = QScrollArea(); scroll.setObjectName("editorScroll"); scroll.setWidgetResizable(True)
-        panel = QWidget(); self.form_outer = QVBoxLayout(panel); self.form_outer.setSpacing(12)
+        panel = QWidget(); panel.setObjectName('editorPanel'); self.form_outer = QVBoxLayout(panel); self.form_outer.setSpacing(12)
         scroll.setWidget(panel)
         split.addWidget(scroll)
         split.setSizes([240, 330, 410])
