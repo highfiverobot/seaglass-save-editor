@@ -159,7 +159,7 @@ class Editor(QMainWindow):
         self.sel_index = None
         self._current_mon = None
         self.setWindowTitle("Emerald Seaglass \u2014 Save Editor")
-        self.resize(1180, 760)
+        self.resize(980, 720)
         self._build_ui()
 
     # ------------------------------------------------------------------ UI
@@ -186,10 +186,15 @@ class Editor(QMainWindow):
         self.btn_save.clicked.connect(self.save_over)
         self.btn_saveas.clicked.connect(self.save_as)
         self.btn_pk3.clicked.connect(self.export_pk3_current)
+        outer.addLayout(head)
+        # Action buttons on their own row so the window can be narrower than the
+        # combined width of all button labels (esp. with the wide pixel font).
+        actions = QHBoxLayout()
         for b in (self.btn_rom, self.btn_open_save, self.btn_apply,
                   self.btn_save, self.btn_saveas, self.btn_pk3):
-            head.addWidget(b)
-        outer.addLayout(head)
+            actions.addWidget(b)
+        actions.addStretch(1)
+        outer.addLayout(actions)
 
         split = QSplitter(Qt.Horizontal)
 
@@ -245,7 +250,7 @@ class Editor(QMainWindow):
         panel = QWidget(); self.form_outer = QVBoxLayout(panel); self.form_outer.setSpacing(12)
         scroll.setWidget(panel)
         split.addWidget(scroll)
-        split.setSizes([240, 420, 700])
+        split.setSizes([240, 330, 410])
         # Lock the logo pane width: disable the first splitter handle so it
         # cannot be dragged (handle exists only after sections are added).
         _h = split.handle(1)
@@ -258,6 +263,7 @@ class Editor(QMainWindow):
         toprow.addWidget(self.sprite)
         self.info = QLabel("Open a ROM and a save to begin."); self.info.setObjectName("info")
         self.info.setAlignment(Qt.AlignTop)
+        self.info.setWordWrap(True)
         toprow.addWidget(self.info, 1)
         panel_wrap = QWidget(); panel_wrap.setLayout(toprow)
         self.form_outer.addWidget(panel_wrap)
